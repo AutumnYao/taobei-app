@@ -82,17 +82,6 @@ class AuthService {
         };
       }
 
-      // 先查找用户，如果用户不存在，直接返回错误
-      let user = await db.findUserByPhone(phoneNumber);
-      
-      if (!user) {
-        return {
-          success: false,
-          error: 'USER_NOT_REGISTERED',
-          message: '该手机号未注册，请先完成注册'
-        };
-      }
-
       // 验证验证码
       const isCodeValid = await db.verifyCode(phoneNumber, verificationCode);
       
@@ -102,6 +91,12 @@ class AuthService {
           error: 'INVALID_OR_EXPIRED_CODE',
           message: '验证码错误或已过期'
         };
+      }
+
+      // 获取或创建用户
+      let user = await db.findUserByPhone(phoneNumber);
+      if (!user) {
+        user = await db.createTestUser(phoneNumber);
       }
 
       // 创建登录会话
