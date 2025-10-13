@@ -1,0 +1,108 @@
+# 前端UI接口库
+# 用于定义所有前端UI组件接口
+
+- type: Frontend
+  id: UI-LoginButton
+  description: 首页的登录按钮组件，点击后跳转到登录页面。
+  properties:
+    - name: onClick
+      type: function
+      description: "点击按钮时的回调函数，用于页面跳转。"
+    - name: text
+      type: string
+      description: "按钮显示的文本，默认为'亲，请登录'。"
+  state:
+    - isVisible
+  dependencies:
+    - none
+  acceptanceCriteria:
+    - 组件应渲染为可点击的按钮。
+    - 点击按钮时应触发onClick回调函数。
+    - 按钮文本应可自定义。
+  changeLog:
+    - date: "2025-01-13"
+      description: "初始创建。"
+
+- type: Frontend
+  id: UI-LoginForm
+  description: 完整的用户登录表单，包含手机号输入、验证码获取和登录功能。
+  properties:
+    - name: onLoginSuccess
+      type: function
+      description: "登录成功后的回调函数。"
+    - name: onNavigateToRegister
+      type: function
+      description: "跳转到注册页面的回调函数。"
+  state:
+    - phoneNumber
+    - verificationCode
+    - error
+    - isLoading
+    - countdown
+    - canSendCode
+  dependencies:
+    - API-POST-SendVerificationCode
+    - API-POST-Login
+  acceptanceCriteria:
+    - 组件应渲染手机号输入框、验证码输入框、获取验证码按钮和登录按钮。
+    - 手机号格式验证应在前端进行。
+    - 获取验证码按钮点击后应进入60秒倒计时状态。
+    - 登录按钮点击时应调用登录API。
+    - 应显示相应的错误提示信息。
+    - 登录成功后应调用onLoginSuccess回调并跳转到首页。
+  changeLog:
+    - date: "2025-01-13"
+      description: "初始创建。"
+
+- type: Frontend
+  id: UI-PhoneNumberInput
+  description: 手机号输入框组件，包含格式验证功能。
+  properties:
+    - name: value
+      type: string
+      description: "输入框的值。"
+    - name: onChange
+      type: function
+      description: "值改变时的回调函数。"
+    - name: onValidation
+      type: function
+      description: "验证结果的回调函数。"
+  state:
+    - isValid
+    - errorMessage
+  dependencies:
+    - none
+  acceptanceCriteria:
+    - 组件应渲染为手机号输入框。
+    - 应实时验证手机号格式。
+    - 格式错误时应显示错误提示。
+    - 应支持受控组件模式。
+  changeLog:
+    - date: "2025-01-13"
+      description: "初始创建。"
+
+- type: Frontend
+  id: UI-VerificationCodeInput
+  description: 验证码输入框组件，用于输入6位数字验证码。
+  properties:
+    - name: value
+      type: string
+      description: "输入框的值。"
+    - name: onChange
+      type: function
+      description: "值改变时的回调函数。"
+    - name: maxLength
+      type: number
+      description: "最大输入长度，默认为6。"
+  state:
+    - isValid
+  dependencies:
+    - none
+  acceptanceCriteria:
+    - 组件应渲染为验证码输入框。
+    - 应限制只能输入数字。
+    - 应限制最大输入长度为6位。
+    - 应支持受控组件模式。
+  changeLog:
+    - date: "2025-01-13"
+      description: "初始创建。"

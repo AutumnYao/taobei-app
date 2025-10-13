@@ -1,0 +1,222 @@
+/* 淘宝风格的登录表单样式 */
+.loginForm {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 40px 30px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 500;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 30px;
+  line-height: 1.2;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.phoneInputContainer {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  background: #ffffff;
+  transition: border-color 0.3s ease;
+}
+
+.phoneInputContainer:hover {
+  border-color: #ff6900;
+}
+
+.phoneInputContainer:focus-within {
+  border-color: #ff6900;
+  box-shadow: 0 0 0 2px rgba(255, 105, 0, 0.1);
+}
+
+.countryCode {
+  padding: 12px 16px;
+  border-right: 1px solid #d9d9d9;
+  color: #666666;
+  font-size: 14px;
+  background: #fafafa;
+  border-radius: 6px 0 0 6px;
+}
+
+.phoneInput {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #333333;
+  background: transparent;
+  border-radius: 0 6px 6px 0;
+}
+
+.phoneInput::placeholder {
+  color: #999999;
+}
+
+.codeInputContainer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.codeInput {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #d9d9d9;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333333;
+  transition: border-color 0.3s ease;
+}
+
+.codeInput:hover {
+  border-color: #ff6900;
+}
+
+.codeInput:focus {
+  border-color: #ff6900;
+  box-shadow: 0 0 0 2px rgba(255, 105, 0, 0.1);
+  outline: none;
+}
+
+.codeInput::placeholder {
+  color: #999999;
+}
+
+.sendCodeButton {
+  padding: 12px 20px;
+  background: #ffffff;
+  border: 1px solid #ff6900;
+  border-radius: 6px;
+  color: #ff6900;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  min-width: 100px;
+}
+
+.sendCodeButton:hover:not(:disabled) {
+  background: #ff6900;
+  color: #ffffff;
+}
+
+.sendCodeButton:disabled {
+  background: #f5f5f5;
+  border-color: #d9d9d9;
+  color: #999999;
+  cursor: not-allowed;
+}
+
+.loginButton {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #ff6900 0%, #ff8533 100%);
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.loginButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e55a00 0%, #ff7a1a 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 105, 0, 0.3);
+}
+
+.loginButton:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.errorMessage {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: #fff2f0;
+  border: 1px solid #ffccc7;
+  border-radius: 6px;
+  color: #ff4d4f;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.registerLink {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666666;
+}
+
+.registerLink a {
+  color: #ff6900;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.registerLink a:hover {
+  text-decoration: underline;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .loginForm {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+  
+  .codeInputContainer {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .sendCodeButton {
+    width: 100%;
+    min-width: auto;
+  }
+}
+
+/* 加载状态动画 */
+@keyframes loading {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+.loading {
+  animation: loading 1.5s ease-in-out infinite;
+}
+
+/* 输入框错误状态 */
+.inputError {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.1) !important;
+}
+
+.inputError:focus {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2) !important;
+}
