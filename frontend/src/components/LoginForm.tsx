@@ -96,7 +96,20 @@ const LoginForm: React.FC<LoginFormProps> = ({
         }
       }
     } catch (err) {
-      setError('登录失败');
+      // 处理网络错误或其他异常
+      if (err instanceof Error) {
+        // 检查错误消息中是否包含特定的错误信息
+        const errorMessage = err.message;
+        if (errorMessage.includes('该手机号未注册，请先完成注册')) {
+          setError('该手机号未注册，请先完成注册');
+        } else if (errorMessage.includes('验证码错误或已过期')) {
+          setError('验证码错误或已过期');
+        } else {
+          setError(errorMessage || '登录失败');
+        }
+      } else {
+        setError('登录失败');
+      }
     } finally {
       setIsLoading(false);
     }
