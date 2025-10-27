@@ -1,0 +1,91 @@
+# 数据库操作接口库
+interfaces:
+  - type: Database
+    id: DB-FindUserByPhone
+    description: 根据手机号查找用户记录。
+    dependencies:
+      - none
+    acceptanceCriteria:
+      - 根据手机号在users表中查找用户记录
+      - 如果用户存在，返回用户信息
+      - 如果用户不存在，返回空结果
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"
+
+  - type: Database
+    id: DB-CreateUser
+    description: 在数据库中创建一个新的用户记录。
+    dependencies:
+      - none
+    acceptanceCriteria:
+      - 成功执行后，users表中会增加一条新记录
+      - 如果手机号已存在，操作应失败并抛出唯一性约束错误
+      - 记录用户的注册时间和登录方式
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"
+
+  - type: Database
+    id: DB-SaveVerificationCode
+    description: 保存验证码到数据库，设置60秒有效期。
+    dependencies:
+      - none
+    acceptanceCriteria:
+      - 在verification_codes表中保存手机号和验证码
+      - 设置验证码有效期为60秒
+      - 如果该手机号已有未过期验证码，更新为新验证码
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"
+
+  - type: Database
+    id: DB-VerifyCode
+    description: 验证手机号对应的验证码是否正确且未过期。
+    dependencies:
+      - none
+    acceptanceCriteria:
+      - 检查verification_codes表中的验证码是否匹配
+      - 检查验证码是否在有效期内
+      - 验证成功后删除该验证码记录
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"
+
+  - type: Database
+    id: DB-ValidatePassword
+    description: 验证用户密码是否正确。
+    dependencies:
+      - none
+    acceptanceCriteria:
+      - 根据用户ID或手机号验证密码
+      - 使用安全的密码哈希比较
+      - 记录登录尝试次数
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"
+
+  - type: Database
+    id: DB-UpdateLoginAttempts
+    description: 更新用户登录尝试次数和状态。
+    dependencies:
+      - none
+    acceptanceCriteria:
+      - 记录用户登录失败次数
+      - 连续3次失败后标记需要图形验证码
+      - 多次失败后可锁定账号
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"
+
+  - type: Database
+    id: DB-UpdateUserLoginMethod
+    description: 更新用户的登录方式记录。
+    dependencies:
+      - none
+    acceptanceCriteria:
+      - 记录用户使用的登录方式（密码登录/短信登录）
+      - 更新最后登录时间
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"

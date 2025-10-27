@@ -1,0 +1,141 @@
+# 后端API接口库
+interfaces:
+  - type: Backend
+    id: API-POST-SendVerificationCode
+    route: POST /api/auth/send-verification-code
+    description: 发送短信验证码到指定手机号。
+    input:
+      type: JSON
+      body:
+        phoneNumber: string
+    output:
+      success:
+        statusCode: 200
+        body: { message: "验证码已发送", countdown: 60 }
+      error:
+        - statusCode: 400
+          body: { error: "请输入正确的手机号码" }
+        - statusCode: 429
+          body: { error: "请求过于频繁，请稍后再试" }
+    dependencies:
+      - DB-SaveVerificationCode
+    acceptanceCriteria:
+      - 验证手机号格式是否正确
+      - 生成6位随机验证码并打印到控制台
+      - 将验证码保存到数据库，有效期60秒
+      - 返回成功响应和倒计时时间
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"
+
+  - type: Backend
+    id: API-POST-SmsLogin
+    route: POST /api/auth/sms-login
+    description: 处理短信验证码登录请求。
+    input:
+      type: JSON
+      body:
+        phoneNumber: string
+        verificationCode: string
+    output:
+      success:
+        statusCode: 200
+        body: { userId: "uuid", token: "jwt", message: "登录成功" }
+      error:
+        - statusCode: 400
+          body: { error: "验证码错误" }
+        - statusCode: 400
+          body: { error: "验证码已过期，请重新获取" }
+        - statusCode: 201
+          body: { userId: "uuid", token: "jwt", message: "该手机号未注册，已自动完成注册" }
+    dependencies:
+      - DB-VerifyCode
+      - DB-FindUserByPhone
+      - DB-CreateUser
+      - DB-UpdateUserLoginMethod
+    acceptanceCriteria:
+      - 验证验证码是否正确且未过期
+      - 检查手机号是否已注册
+      - 未注册用户自动完成注册
+      - 已注册用户直接登录
+      - 返回JWT令牌和用户信息
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"
+
+  - type: Backend
+    id: API-POST-PasswordLogin
+    route: POST /api/auth/password-login
+    description: 处理密码登录请求。
+    input:
+      type: JSON
+      body:
+        account: string
+        password: string
+        captcha: string (optional)
+    output:
+      success:
+        statusCode: 200
+        body: { userId: "uuid", token: "jwt", message: "登录成功" }
+      error:
+        - statusCode: 400
+          body: { error: "账号或密码错误" }
+        - statusCode: 404
+          body: { error: "该账号不存在，请检查或前往注册" }
+        - statusCode: 423
+          body: { error: "账号暂时不可登录，请稍后再试或联系客服" }
+        - statusCode: 428
+          body: { error: "需要图形验证码", requireCaptcha: true }
+    dependencies:
+      - DB-FindUserByPhone
+      - DB-ValidatePassword
+      - DB-UpdateLoginAttempts
+      - DB-UpdateUserLoginMethod
+    acceptanceCriteria:
+      - 验证账号是否存在
+      - 验证密码是否正确
+      - 连续3次失败后要求图形验证码
+      - 多次失败后锁定账号
+      - 成功登录返回JWT令牌
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"
+
+  - type: Backend
+    id: API-POST-Register
+    route: POST /api/auth/register
+    description: 处理用户注册请求，包含验证码校验和密码设置。
+    input:
+      type: JSON
+      body:
+        phoneNumber: string
+        verificationCode: string
+        password: string
+        confirmPassword: string
+        agreeTerms: boolean
+    output:
+      success:
+        statusCode: 201
+        body: { userId: "uuid", token: "jwt", message: "注册成功" }
+      error:
+        - statusCode: 400
+          body: { error: "验证码错误" }
+        - statusCode: 400
+          body: { error: "两次输入的密码不一致" }
+        - statusCode: 400
+          body: { error: "请同意用户协议" }
+        - statusCode: 409
+          body: { userId: "uuid", token: "jwt", message: "该手机号已注册，将直接为您登录" }
+    dependencies:
+      - DB-VerifyCode
+      - DB-FindUserByPhone
+      - DB-CreateUser
+    acceptanceCriteria:
+      - 验证验证码是否正确且未过期
+      - 验证两次密码输入是否一致
+      - 验证是否同意用户协议
+      - 检查手机号是否已注册
+      - 已注册用户直接登录，未注册用户完成注册
+    changeLog:
+      - date: "2025-10-27"
+        description: "初始创建。"
