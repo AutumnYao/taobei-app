@@ -58,6 +58,9 @@ describe('Authentication Routes', () => {
   describe('POST /api/auth/login', () => {
     // 基于API-Login的acceptanceCriteria
     it('应该成功登录已注册用户', async () => {
+      // 先创建测试用户
+      await db.createTestUser('13812345680');
+      
       // 先发送验证码
       await request(app)
         .post('/api/auth/send-code')

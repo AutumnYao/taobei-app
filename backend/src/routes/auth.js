@@ -86,4 +86,48 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// POST /api/auth/register - 用户注册
+router.post('/register', async (req, res) => {
+  try {
+    const { phoneNumber, verificationCode } = req.body;
+
+    // 验证请求参数
+    if (!phoneNumber || !verificationCode) {
+      return res.status(400).json({
+        success: false,
+        error: 'MISSING_PARAMETERS',
+        message: '手机号和验证码不能为空'
+      });
+    }
+
+    // 调用认证服务进行注册
+    const result = await authService.register(phoneNumber, verificationCode);
+
+    if (result.success) {
+      return res.status(201).json(result);
+    } else {
+      // 根据错误类型返回相应的状态码
+      let statusCode = 400;
+      if (result.error === 'USER_ALREADY_EXISTS') {
+        statusCode = 409; // 用户已存在
+      } else if (result.error === 'INVALID_OR_EXPIRED_CODE') {
+        statusCode = 400; // 验证码错误或过期
+      } else if (result.error === 'INVALID_PHONE_FORMAT') {
+        statusCode = 400; // 手机号格式错误
+      } else {
+        statusCode = 500; // 其他服务器错误
+      }
+      
+      return res.status(statusCode).json(result);
+    }
+  } catch (error) {
+    console.error('注册接口错误:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'INTERNAL_SERVER_ERROR',
+      message: '服务器内部错误'
+    });
+  }
+});
+
 module.exports = router;
